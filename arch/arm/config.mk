@@ -72,5 +72,4 @@ endif
 
 # needed for relocation
 ifndef CONFIG_NAND_SPL
-LDFLAGS_u-boot += -pie
 endif

@@ -256,7 +256,7 @@ init_fnc_t *init_sequence[] = {
 	NULL,
 };
 
-void board_init_f(ulong bootflag)
+unsigned int board_init_f(ulong bootflag)
 {
 	bd_t *bd;
 	init_fnc_t **init_fnc_ptr;
@@ -369,8 +369,9 @@ void board_init_f(ulong bootflag)
 	 * reserve memory for U-Boot code, data & bss
 	 * round down to next 4 kB limit
 	 */
-	addr -= gd->mon_len;
-	addr &= ~(4096 - 1);
+	//addr -= gd->mon_len;
+	//addr &= ~(4096 - 1);
+	addr = CONFIG_SYS_TEXT_BASE;
 
 	debug("Reserving %ldk for U-Boot at: %08lx\n", gd->mon_len >> 10, addr);
 
@@ -435,8 +436,9 @@ void board_init_f(ulong bootflag)
 	debug("relocation Offset is: %08lx\n", gd->reloc_off);
 	memcpy(id, (void *)gd, sizeof(gd_t));
 
-	relocate_code(addr_sp, id, addr);
-
+	//relocate_code(addr_sp, id, addr);
+	return (unsigned int)id;
+	
 	/* NOTREACHED - relocate_code() does not return */
 }
 
