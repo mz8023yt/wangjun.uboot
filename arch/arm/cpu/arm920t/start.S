@@ -74,7 +74,9 @@ _fiq:			.word fiq
 .globl _TEXT_BASE
 _TEXT_BASE:
 	.word	CONFIG_SYS_TEXT_BASE
-
+.global base_sp
+base_sp:
+	.long 0
 /*
  * These are defined in the board-specific linker script.
  * Subtracting _start from them lets the linker put their
@@ -227,9 +229,11 @@ call_board_init_f:
 	// r1 代码的链接地址，即内存分布图中的 MALLOC_LEN 的指针 
 	// 第一个参数由 board_init_f 返回，已经保存在 r0 中了
 	ldr r1, _TEXT_BASE
+	ldr sp, base_sp					// 重新设置栈
 
 	// 跳转到第二阶段执行代码
 	bl board_init_r
+	
 
 /*
  * We are done. Do not return, instead branch to second part of board

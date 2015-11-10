@@ -262,6 +262,7 @@ unsigned int board_init_f(ulong bootflag)
 	init_fnc_t **init_fnc_ptr;
 	gd_t *id;
 	ulong addr, addr_sp;
+	extern ulong base_sp;
 #ifdef CONFIG_PRAM
 	ulong reg;
 #endif
@@ -369,10 +370,11 @@ unsigned int board_init_f(ulong bootflag)
 	 * reserve memory for U-Boot code, data & bss
 	 * round down to next 4 kB limit
 	 */
+	 /* 这里面我们自己写死了，所以要保证代码不会超出分配
+	的大小 */
 	//addr -= gd->mon_len;
 	//addr &= ~(4096 - 1);
 	addr = CONFIG_SYS_TEXT_BASE;
-
 	debug("Reserving %ldk for U-Boot at: %08lx\n", gd->mon_len >> 10, addr);
 
 #ifndef CONFIG_SPL_BUILD
@@ -436,6 +438,7 @@ unsigned int board_init_f(ulong bootflag)
 	debug("relocation Offset is: %08lx\n", gd->reloc_off);
 	memcpy(id, (void *)gd, sizeof(gd_t));
 
+	base_sp = addr_sp;	// 设置堆栈
 	//relocate_code(addr_sp, id, addr);
 	return (unsigned int)id;
 	
@@ -526,8 +529,9 @@ void board_init_r(gd_t *id, ulong dest_addr)
 		print_size(flash_size, "\n");
 # endif /* CONFIG_SYS_FLASH_CHECKSUM */
 	} else {
-		puts(failed);
-		hang();
+		puts("0KB \n\r");
+		//puts(failed);
+		//hang();
 	}
 #endif
 

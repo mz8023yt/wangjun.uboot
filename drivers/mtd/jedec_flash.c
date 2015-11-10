@@ -367,6 +367,28 @@ static const struct amd_flash_info jedec_table[] = {
 		}
 	},
 #endif
+	/* Mini2440 使用的是 S29AL016J */
+	{
+		.mfr_id		= (u16)AMD_MANUFACT,	// 厂家 ID
+		.dev_id		= 0x2249,		    	// 设备 ID
+		.name		= "AMD S29AL016J",		// 设备名字，不重要
+		.uaddr		= {						// 解锁地址，就是芯片手册中的 前两周期地址址
+											// 这个地址 555 2AA 是 NorFlash 看到的地址
+											// 在代码中会进行移位操作的，因为 2440 接线时
+											//  data 0 是没有接的，意识到就行了
+			[1] = MTD_UADDR_0x0555_0x02AA /* x16 */
+		},
+		.DevSize	= SIZE_2MiB,		  	// 芯片大小
+		.CmdSet		= CFI_CMDSET_AMD_LEGACY,// 命令集
+		.NumEraseRegions= 4,				// 擦除区域，是 NorFlash 芯片的分区信息
+		.regions	= {						// 看芯片手册得到的
+			//        区域大小   个数
+			ERASEINFO(16*1024, 1),
+			ERASEINFO(8*1024, 2),
+			ERASEINFO(32*1024, 1),
+			ERASEINFO(64*1024, 31),
+		}
+	},
 };
 
 static inline void fill_info(flash_info_t *info, const struct amd_flash_info *jedec_entry, ulong base)
