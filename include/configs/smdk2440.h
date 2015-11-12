@@ -64,6 +64,14 @@
 #define CONFIG_DM9000_BASE              0x20000000
 #define DM9000_IO                       CONFIG_DM9000_BASE
 #define DM9000_DATA                     (CONFIG_DM9000_BASE + 4)
+#define CONFIG_DM9000_NO_SROM  
+			/*（如果不设置这个宏，uboot会打印类似：
+			Warning: dm9000 MAC addresses don't match:
+			Address in SROM is         ff:ff:ff:ff:ff:ff
+			Address in environment is  00:0c:29:2a:5c:a5
+			的信息）*/
+
+
 
 /* 启动参数 */
 #define CONFIG_BOOTARGS "console=ttySAC0 root=/dev/mtdblock3"
