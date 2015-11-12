@@ -653,6 +653,8 @@ void board_init_r(gd_t *id, ulong dest_addr)
 	}
 #endif
 
+	run_command("mtdparts default",0); // 0 随便写不需要用的
+
 	/* main_loop() can return to retry autoboot, if so just run it again. */
 	for (;;) {
 		main_loop();
